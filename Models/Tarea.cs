@@ -1,3 +1,6 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace proyectoTareas.Models
 {
     public class Tarea
@@ -65,7 +68,7 @@ namespace proyectoTareas.Models
 
             if (!string.IsNullOrEmpty(nuevoTitulo))
                 throw new ArgumentException("El título no puede ser nulo o vacío.");
-                
+
             Titulo = nuevoTitulo;
         }
 
