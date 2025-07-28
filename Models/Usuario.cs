@@ -16,11 +16,8 @@ namespace proyectoTareas.Models
         [BsonElement("fechaRegistro")]
         public DateTime FechaRegistro { get; set; }
 
-        public Usuario() { }
-
-        public Usuario(ObjectId id, string nombre, string email, string passwordHash)
+        public Usuario(string nombre, string email, string passwordHash)
         {
-            Id = id;
             Nombre = nombre;
             Email = email;
             FechaRegistro = DateTime.Now;

@@ -17,11 +17,9 @@ namespace proyectoTareas.Models
         public DateTime FechaCreacion { get; set; }
         [BsonElement("fechaLimite")]
         public DateTime FechaLimite { get; set; }
-
-        public Tarea() { }
+        
         public Tarea(ObjectId id, string titulo, string descripcion, string estado, DateTime fechaLimite)
         {
-            Id = id;
             Titulo = titulo;
             Descripcion = descripcion;
             Estado = estado;
