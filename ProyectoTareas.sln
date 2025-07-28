@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoTareas", "ProyectoTareas.csproj", "{B48C31A0-ADFB-16CB-FB96-772D66D124D3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tareas.Tests", "Tareas.Tests\Tareas.Tests.csproj", "{546379A0-DEEE-4F94-8462-07ABC47936D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tareas.API", "Tareas.API", "{86877916-60F1-B761-676B-59CEB0933AC9}"
