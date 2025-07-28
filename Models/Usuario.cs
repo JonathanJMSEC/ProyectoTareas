@@ -15,6 +15,8 @@ namespace proyectoTareas.Models
         public string PasswordHash { get; private set; }
         [BsonElement("fechaRegistro")]
         public DateTime FechaRegistro { get; set; }
+        [BsonElement("tareas")]
+        public List<Tarea> Tareas { get; set; } = new List<Tarea>();
 
         public Usuario(string nombre, string email, string passwordHash)
         {
@@ -39,6 +41,35 @@ namespace proyectoTareas.Models
                 throw new ArgumentException("El nuevo nombre no puede ser nulo o vacío.");
 
             Nombre = nuevoNombre;
+        }
+
+        public void AgregarTarea(Tarea tarea)
+        {
+            if (tarea == null)
+                throw new ArgumentNullException(nameof(tarea), "La tarea no puede ser nula.");
+
+            Tareas.Add(tarea);
+        }
+
+        public void EliminarTarea(Tarea tarea)
+        {
+            if (tarea == null)
+                throw new ArgumentNullException(nameof(tarea), "La tarea no puede ser nula.");
+
+            Tareas.Remove(tarea);
+        }
+
+        public Tarea ObtenerTareaPorId(ObjectId tareaId)
+        {
+            return Tareas.FirstOrDefault(t => t.Id == tareaId);
+        }
+
+        public void ActualizarPassword(string nuevoPasswordHash)
+        {
+            if (string.IsNullOrEmpty(nuevoPasswordHash))
+                throw new ArgumentException("El nuevo password no puede ser nulo o vacío.");
+
+            PasswordHash = nuevoPasswordHash;
         }
     }
 }
