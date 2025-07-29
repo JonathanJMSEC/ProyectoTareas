@@ -18,7 +18,7 @@ namespace Tareas.API.Models
         [BsonElement("fechaLimite")]
         public DateTime FechaLimite { get; set; }
         
-        public Tarea(ObjectId id, string titulo, string descripcion, string estado, DateTime fechaLimite)
+        public Tarea(string titulo, string descripcion, string estado, DateTime fechaLimite)
         {
             Titulo = titulo;
             Descripcion = descripcion;
