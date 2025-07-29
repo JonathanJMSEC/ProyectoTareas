@@ -1,4 +1,4 @@
-using DTO.Usuario;
+using Tareas.API.DTO.Usuario;
 using Services.Helpers;
 using Tareas.API.Models;
 

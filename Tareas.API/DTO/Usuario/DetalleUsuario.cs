@@ -1,4 +1,4 @@
-namespace DTO.Usuario
+namespace Tareas.API.DTO.Usuario
 {
     public class DetalleUsuarioDTO
     {
