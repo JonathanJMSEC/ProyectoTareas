@@ -1,7 +1,6 @@
-using DTO.Usuario;
+using Tareas.API.DTO.Usuario;
 using Tareas.API.Models;
 using Tareas.API.Mappers;
-using MongoDB.Bson;
 
 namespace Tareas.Tests.Mappers
 {
