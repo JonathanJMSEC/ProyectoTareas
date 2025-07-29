@@ -1,4 +1,4 @@
-namespace DTO.Tarea
+namespace Tareas.API.DTO.Tarea
 {
     public class ResumenTareaDTO
     {

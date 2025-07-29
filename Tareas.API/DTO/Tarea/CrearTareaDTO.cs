@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DTO.Tarea
+namespace Tareas.API.DTO.Tarea
 {
     public class CrearTareaDTO
     {
