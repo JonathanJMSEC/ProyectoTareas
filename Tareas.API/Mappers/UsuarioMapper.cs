@@ -16,7 +16,7 @@ namespace Tareas.API.Mappers
             return new Usuario(dto.Nombre, dto.Email, contraseñaHasheada);
         }
 
-        public static DetalleUsuarioDTO ToDTODetalle(Usuario usuario)
+        public static DetalleUsuarioDTO ToListarDTO(Usuario usuario)
         {
             if (usuario == null)
                 return null;
@@ -30,7 +30,7 @@ namespace Tareas.API.Mappers
             };
         }
 
-        public static ResumenUsuarioDTO ToDTOResumen(Usuario usuario)
+        public static ResumenUsuarioDTO ToResumenDTO(Usuario usuario)
         {
             if (usuario == null)
                 return null;
