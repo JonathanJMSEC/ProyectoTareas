@@ -1,6 +1,6 @@
 namespace DTO.Usuario
 {
-    public class DetalleUsuario
+    public class DetalleUsuarioDTO
     {
         public string Nombre { get; set; }
         public string Email { get; set; }
