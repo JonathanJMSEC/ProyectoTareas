@@ -41,5 +41,21 @@ namespace Tareas.API.Mappers
                 Email = usuario.Email
             };
         }
+
+        public static Usuario ToModelActualizar(Usuario existingUsuario, CrearUsuarioDTO dtoConDatosActualizados)
+        {
+            if (existingUsuario == null || dtoConDatosActualizados == null)
+                return existingUsuario;
+
+            existingUsuario.Nombre = dtoConDatosActualizados.Nombre;
+            existingUsuario.Email = dtoConDatosActualizados.Email;
+
+            if (!string.IsNullOrEmpty(dtoConDatosActualizados.Contrasena))
+            {
+                existingUsuario.ActualizarPassword(CalculoHash.GenerarHash(dtoConDatosActualizados.Contrasena));
+            }
+
+            return existingUsuario;
+        }
     }
 }
