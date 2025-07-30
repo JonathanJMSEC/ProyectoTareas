@@ -9,6 +9,5 @@ namespace Tareas.API.Services.Interfaces
         Task<Tarea> ObtenerTareaPorIdAsync(string id);
         Task ActualizarTareaAsync(string id, ActualizarTareaDTO tarea);
         Task EliminarTareaAsync(string id);
-        Task<IEnumerable<Tarea>> ObtenerTareasPorUsuarioAsync(string usuarioId);
     }
 }
