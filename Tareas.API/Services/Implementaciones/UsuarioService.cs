@@ -8,9 +8,9 @@ namespace Tareas.API.Services.Implementaciones
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly IRepository<Usuario> _context;
+        private readonly IUsuarioRepository _context;
 
-        public UsuarioService(IRepository<Usuario> context)
+        public UsuarioService(IUsuarioRepository context)
         {
             _context = context;
         }
@@ -29,14 +29,19 @@ namespace Tareas.API.Services.Implementaciones
         {
             return await _context.GetAllAsync();
         }
-        
+
         public async Task ActualizarUsuarioAsync(string id, CrearUsuarioDTO usuario)
         {
             var existingUsuario = await _context.GetByIdAsync(id);
 
             if (existingUsuario != null)
                 await _context.UpdateAsync(id, UsuarioMapper.ToModelActualizar(existingUsuario, usuario));
-            
+
+        }
+        
+        public async Task<IEnumerable<Tarea>> ObtenerTareasPorUsuarioAsync(string usuarioId)
+        {
+            return await _context.ObtenerTareasPorUsuarioAsync(usuarioId);
         }
     }
 }
