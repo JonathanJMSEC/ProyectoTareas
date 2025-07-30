@@ -1,4 +1,4 @@
-using DTO.Tarea;
+using Tareas.API.DTO.Tarea;
 using Tareas.API.Models;
 using Tareas.API.Mappers;
 using MongoDB.Bson;
