@@ -6,7 +6,7 @@ namespace Tareas.API.Repository.Implementaciones
 {
     public class MongoRepository<T> : IRepository<T> where T : class
     {
-        private IMongoCollection<T> Collection { get; }
+        protected IMongoCollection<T> Collection { get; }
 
         public MongoRepository(IMongoDatabase database, string collectionName)
         {
