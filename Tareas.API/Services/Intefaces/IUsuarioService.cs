@@ -9,6 +9,5 @@ namespace Tareas.API.Services.Interfaces
         Task CrearUsuarioAsync(CrearUsuarioDTO usuario);
         Task<Usuario> ObtenerUsuarioPorIdAsync(string id);
         Task<IEnumerable<Usuario>> ObtenerTodosLosUsuariosAsync();
-        Task<IEnumerable<Tarea>> ObtenerTareasUsuarioAsync(string id);
     }
 }
