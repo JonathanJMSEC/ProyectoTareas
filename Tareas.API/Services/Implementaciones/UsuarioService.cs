@@ -3,7 +3,6 @@ using Tareas.API.Services.Interfaces;
 using Tareas.API.DTO.Usuario;
 using Tareas.API.Repository.Interfaces;
 using Tareas.API.Mappers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Tareas.API.Services.Implementaciones
 {
@@ -68,6 +67,10 @@ namespace Tareas.API.Services.Implementaciones
             if (existingUsuario != null)
             {
                 await _context.UpdateAsync(id, UsuarioMapper.ToModelActualizar(existingUsuario, usuario));
+
+                existingUsuario =  await _context.GetByIdAsync(id);
+
+
 
                 return ServiceResponse<Usuario>.Ok(existingUsuario, "Usuario actualizado correctamente.");
             }
