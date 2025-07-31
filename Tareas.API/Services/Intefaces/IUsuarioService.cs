@@ -1,15 +1,16 @@
 using Tareas.API.DTO.Usuario;
 
 using Tareas.API.Models;
+using Tareas.API.Services.Implementaciones;
 
 namespace Tareas.API.Services.Interfaces
 {
     public interface IUsuarioService
     {
-        Task CrearUsuarioAsync(CrearUsuarioDTO usuario);
-        Task<Usuario> ObtenerUsuarioPorIdAsync(string id);
-        Task<IEnumerable<Usuario>> ObtenerTodosLosUsuariosAsync();
-        Task ActualizarUsuarioAsync(string id, CrearUsuarioDTO usuario);
-        Task<IEnumerable<Tarea>> ObtenerTareasPorUsuarioAsync(string usuarioId);
+        Task<ServiceResponse<Usuario>> CrearUsuarioAsync(CrearUsuarioDTO usuario);
+        Task<ServiceResponse<Usuario>> ObtenerUsuarioPorIdAsync(string id);
+        Task<ServiceResponse<IEnumerable<Usuario>>> ObtenerTodosLosUsuariosAsync();
+        Task<ServiceResponse<Usuario>> ActualizarUsuarioAsync(string id, CrearUsuarioDTO usuario);
+        Task<ServiceResponse<IEnumerable<Tarea>>> ObtenerTareasPorUsuarioAsync(string usuarioId);
     }
 }
