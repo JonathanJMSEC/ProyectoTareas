@@ -12,7 +12,7 @@ namespace Tareas.API.Services.Helpers
                 return ServiceResponse<CrearTareaDTO>.Error("La tarea no puede ser nula.");
 
             if (string.IsNullOrWhiteSpace(tarea.Titulo))
-                return  ServiceResponse<CrearTareaDTO>.Error("El título de la tarea es obligatorio.");
+                return ServiceResponse<CrearTareaDTO>.Error("El título de la tarea es obligatorio.");
 
             if (tarea.FechaLimite < DateTime.Now)
                 return ServiceResponse<CrearTareaDTO>.Error("La fecha límite debe ser una fecha futura.");
@@ -51,6 +51,14 @@ namespace Tareas.API.Services.Helpers
                 return ServiceResponse<Tarea>.Error("El ID de la tarea debe ser un GUID válido.");
 
             return ServiceResponse<Tarea>.Ok(null, "El ID es válido.");
+        }
+        
+        public static ServiceResponse<IEnumerable<Tarea>> EsListaDeTareasValida(IEnumerable<Tarea> tareas)
+        {
+            if (tareas == null || !tareas.Any())
+                return ServiceResponse<IEnumerable<Tarea>>.Error("La lista de tareas no puede ser nula o vacía.");
+
+            return ServiceResponse<IEnumerable<Tarea>>.Ok(tareas, "La lista de tareas es válida.");
         }
     }
 }
