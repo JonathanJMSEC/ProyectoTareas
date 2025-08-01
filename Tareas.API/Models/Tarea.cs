@@ -19,6 +19,9 @@ namespace Tareas.API.Models
         public string Estado { get; set; }
         [BsonElement("fechaCreacion")]
         public DateTime FechaCreacion { get; set; }
+        /// <summary>
+        /// Fecha límite para completar la tarea.
+        /// </summary>
         [BsonElement("fechaLimite")]
         public DateTime FechaLimite { get; set; }
 
