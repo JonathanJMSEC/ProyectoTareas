@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Services.Helpers
+namespace Tareas.API.Services.Helpers
 {
     /// <summary>
     /// Clase para calcular hashes de contraseñas.

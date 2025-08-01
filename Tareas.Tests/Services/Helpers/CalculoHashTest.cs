@@ -9,10 +9,10 @@ namespace Tareas.Tests.Helpers
             var input = "test input";
 
             // Act
-            var actualHash = Services.Helpers.CalculoHash.GenerarHash(input);
+            var actualHash = API.Services.Helpers.CalculoHash.GenerarHash(input);
 
             // Assert
-            Assert.True(Services.Helpers.CalculoHash.VerificarHash(input, actualHash));
+            Assert.True(API.Services.Helpers.CalculoHash.VerificarHash(input, actualHash));
         }
     }
 }
