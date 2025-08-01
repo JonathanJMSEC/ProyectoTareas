@@ -4,8 +4,16 @@ using Tareas.API.Services.Implementaciones;
 
 namespace Tareas.API.Services.Helpers
 {
+    /// <summary>
+    /// Clase para validar tareas.
+    /// </summary>
     public static class ValidacionesTarea
     {
+        /// <summary>
+        /// Valida si una tarea es válida para crear.
+        /// /// </summary>
+        /// <param name="tarea">DTO de tarea a validar.</param>
+        /// <returns>ServiceResponse con el resultado de la validación.</returns>
         public static ServiceResponse<CrearTareaDTO> EsTareaValida(CrearTareaDTO tarea)
         {
             if (tarea == null)
@@ -20,6 +28,12 @@ namespace Tareas.API.Services.Helpers
             return ServiceResponse<CrearTareaDTO>.Ok(tarea, "La tarea es válida.");
         }
 
+        /// <summary>
+        /// Valida si una tarea es actualizable.
+        /// </summary>
+        /// <param name="id">ID de la tarea a validar.</param>
+        /// <param name="tarea">DTO de tarea a validar.</param>
+        /// <returns>ServiceResponse con el resultado de la validación.</returns>
         public static ServiceResponse<ActualizarTareaDTO> EsTareaActualizable(string id, ActualizarTareaDTO tarea)
         {
             if (tarea == null)
@@ -34,6 +48,12 @@ namespace Tareas.API.Services.Helpers
             return ServiceResponse<ActualizarTareaDTO>.Ok(tarea, "La tarea es actualizable.");
         }
 
+        /// <summary>
+        /// Valida si una tarea existe.
+        /// /// </summary>
+        /// <param name="id">ID de la tarea a validar.</param>
+        /// <param name="tarea">Modelo de tarea a validar.</param>
+        /// <returns>ServiceResponse con el resultado de la validación.</returns>
         public static ServiceResponse<Tarea> EsTareaExistente(string id, Tarea tarea)
         {
             if (tarea == null)
@@ -42,6 +62,11 @@ namespace Tareas.API.Services.Helpers
             return ServiceResponse<Tarea>.Ok(tarea, "La tarea existe.");
         }
 
+        /// <summary>
+        /// Valida si un ID de tarea es válido. 
+        /// /// </summary>
+        /// <param name="id">ID de la tarea a validar.</param>
+        /// <returns>ServiceResponse con el resultado de la validación.</returns>
         public static ServiceResponse<Tarea> EsIdValido(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -52,7 +77,12 @@ namespace Tareas.API.Services.Helpers
 
             return ServiceResponse<Tarea>.Ok(null, "El ID es válido.");
         }
-        
+
+        /// <summary>
+        /// Valida si una lista de tareas es válida.
+        /// /// </summary>
+        /// <param name="tareas">Lista de tareas a validar.</param>
+        /// <returns>ServiceResponse con el resultado de la validación.</returns>
         public static ServiceResponse<IEnumerable<Tarea>> EsListaDeTareasValida(IEnumerable<Tarea> tareas)
         {
             if (tareas == null || !tareas.Any())
