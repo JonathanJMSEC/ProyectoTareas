@@ -5,6 +5,10 @@ namespace Tareas.API.Models
 {
     public class Usuario
     {
+        /// <summary>
+        /// Modelo que representa un usuario en el sistema. 
+        /// Contiene propiedades para el nombre, email, password hash, fecha de registro y lista de tareas.
+        /// </summary>
         [BsonId]
         public ObjectId Id { get; set; }
         [BsonElement("nombre")]

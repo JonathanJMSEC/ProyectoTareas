@@ -5,6 +5,10 @@ using MongoDB.Bson;
 
 namespace Tareas.API.Repository.Implementaciones
 {
+    /// <summary>
+    /// Implementación del repositorio de usuarios.
+    /// Hereda de MongoRepository para operaciones CRUD básicas.
+    /// </summary>
     public class UsuarioRepository : MongoRepository<Usuario>, IRepository<Usuario>
     {
         public UsuarioRepository(IMongoDatabase database) : base(database, "Usuarios")

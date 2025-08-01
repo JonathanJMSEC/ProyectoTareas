@@ -4,6 +4,11 @@ using Tareas.API.Repository.Interfaces;
 
 namespace Tareas.API.Repository.Implementaciones
 {
+    /// <summary>
+    /// Implementación genérica del repositorio para operaciones CRUD básicas.
+    /// Utiliza MongoDB como base de datos.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class MongoRepository<T> : IRepository<T> where T : class
     {
         protected IMongoCollection<T> Collection { get; }

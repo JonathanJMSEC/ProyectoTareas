@@ -3,6 +3,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Tareas.API.Models
 {
+    /// <summary>
+    /// Modelo que representa una tarea en el sistema.
+    /// Contiene propiedades para el título, descripción, estado, fecha de creación y fecha límite
+    /// </summary>
     public class Tarea
     {
         [BsonId]
@@ -17,7 +21,7 @@ namespace Tareas.API.Models
         public DateTime FechaCreacion { get; set; }
         [BsonElement("fechaLimite")]
         public DateTime FechaLimite { get; set; }
-        
+
         public Tarea(string titulo, string descripcion, string estado, DateTime fechaLimite)
         {
             Titulo = titulo;
