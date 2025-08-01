@@ -18,8 +18,7 @@ namespace Tareas.API.Services.Implementaciones
 
         public async Task<ServiceResponse<Usuario>> CrearUsuarioAsync(CrearUsuarioDTO usuario)
         {
-            if (!ValidacionesUsuario.EsUsuarioValido(usuario))
-                return ServiceResponse<Usuario>.Error("Todos los campos son obligatorios.");
+            ValidacionesUsuario.EsUsuarioValido(usuario);
 
             var usuarioCreado = UsuarioMapper.ToModel(usuario);
 
@@ -30,13 +29,11 @@ namespace Tareas.API.Services.Implementaciones
 
         public async Task<ServiceResponse<Usuario>> ObtenerUsuarioPorIdAsync(string id)
         {
-            if (!ValidacionesUsuario.EsIdValido(id))
-                return ServiceResponse<Usuario>.Error("El ID del usuario no puede ser nulo o vacío.");
+            ValidacionesUsuario.EsIdValido(id);
 
             var usuarioObtenido = await _context.GetByIdAsync(id);
 
-            if (!ValidacionesUsuario.EsUsuarioExistente(usuarioObtenido))
-                return ServiceResponse<Usuario>.Error("Usuario no encontrado.");
+            ValidacionesUsuario.EsUsuarioExistente(usuarioObtenido);
             
             return ServiceResponse<Usuario>.Ok(usuarioObtenido, "Usuario obtenido correctamente.");
 
@@ -46,23 +43,19 @@ namespace Tareas.API.Services.Implementaciones
         {
             IEnumerable<Usuario> listaDeUsuarios = await _context.GetAllAsync();
 
-            if (!ValidacionesUsuario.EsListaDeUsuariosValida(listaDeUsuarios))
-                return ServiceResponse<IEnumerable<Usuario>>.Error("No se encontraron usuarios.");
+            ValidacionesUsuario.EsListaDeUsuariosValida(listaDeUsuarios);
             
             return ServiceResponse<IEnumerable<Usuario>>.Ok(listaDeUsuarios, "Usuarios obtenidos correctamente.");
         }
 
         public async Task<ServiceResponse<Usuario>> ActualizarUsuarioAsync(string id, CrearUsuarioDTO usuario)
         {
-            if (!ValidacionesUsuario.EsIdValido(id))
-                return ServiceResponse<Usuario>.Error("El ID del usuario no puede ser nulo o vacío.");
-            if (!ValidacionesUsuario.EsUsuarioValido(usuario))
-                return ServiceResponse<Usuario>.Error("Todos los campos son obligatorios.");
+            ValidacionesUsuario.EsIdValido(id);
+            ValidacionesUsuario.EsUsuarioValido(usuario);
 
             var existingUsuario = await _context.GetByIdAsync(id);
 
-            if (!ValidacionesUsuario.EsUsuarioExistente(existingUsuario))
-                return ServiceResponse<Usuario>.Error("Usuario no encontrado.");
+            ValidacionesUsuario.EsUsuarioExistente(existingUsuario);
 
             await _context.UpdateAsync(id, UsuarioMapper.ToModelActualizar(existingUsuario, usuario));
 
@@ -74,13 +67,11 @@ namespace Tareas.API.Services.Implementaciones
 
         public async Task<ServiceResponse<IEnumerable<Tarea>>> ObtenerTareasPorUsuarioAsync(string usuarioId)
         {
-            if (!ValidacionesUsuario.EsIdValido(usuarioId))
-                return ServiceResponse<IEnumerable<Tarea>>.Error("El ID del usuario no puede ser nulo o vacío.");
+            ValidacionesUsuario.EsIdValido(usuarioId);
 
             IEnumerable<Tarea> tareasDelUsuario = await _context.ObtenerTareasPorUsuarioAsync(usuarioId);
 
-            if (tareasDelUsuario == null || !tareasDelUsuario.Any())
-                return ServiceResponse<IEnumerable<Tarea>>.Error("No se encontraron tareas para el usuario especificado.");
+            ValidacionesTarea.EsListaDeTareasValida(tareasDelUsuario);
             
             return ServiceResponse<IEnumerable<Tarea>>.Ok(tareasDelUsuario, "Tareas obtenidas correctamente.");
         }
