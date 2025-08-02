@@ -1,6 +1,7 @@
 using Tareas.API.DTO.Usuario;
 using Tareas.API.Models;
 using Tareas.API.Mappers;
+using Tareas.API.Services.Helpers;
 
 namespace Tareas.Tests.Mappers
 {
@@ -24,14 +25,14 @@ namespace Tareas.Tests.Mappers
             Assert.NotNull(usuario);
             Assert.Equal(dto.Nombre, usuario.Nombre);
             Assert.Equal(dto.Email, usuario.Email);
-            Assert.Equal(Services.Helpers.CalculoHash.GenerarHash(contrasena), usuario.PasswordHash);
+            Assert.Equal(CalculoHash.GenerarHash(contrasena), usuario.PasswordHash);
         }
 
         [Fact]
         public void ToListarDTO_DeberiaConvertirUsuarioADetalleUsuarioDTO()
         {
             // Arrange
-            var usuario = new Usuario("Test Usuario", "emailfalso@gmail.com", Services.Helpers.CalculoHash.GenerarHash("password123"))
+            var usuario = new Usuario("Test Usuario", "emailfalso@gmail.com", CalculoHash.GenerarHash("password123"))
             {
                 Tareas = new List<Tarea> { new Tarea("titulo", "desc", "pendiente", DateTime.Now.AddDays(2)), new Tarea("titulo", "desc", "pendiente", DateTime.Now.AddDays(2)) } // Simulando dos tareas
             };
@@ -51,7 +52,7 @@ namespace Tareas.Tests.Mappers
         public void ToResumenDTO_DeberiaConvertirUsuarioAResumenDTO()
         {
             // Arrange
-            var usuario = new Usuario("Test Usuario", "emailfalso@gmail.com", Services.Helpers.CalculoHash.GenerarHash("password123"));
+            var usuario = new Usuario("Test Usuario", "emailfalso@gmail.com", CalculoHash.GenerarHash("password123"));
             // Act
             ResumenUsuarioDTO resumenUsuarioDTO = UsuarioMapper.ToResumenDTO(usuario);
             // Then
