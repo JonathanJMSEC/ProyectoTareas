@@ -1,5 +1,5 @@
 using Tareas.API.DTO.Usuario;
-using Services.Helpers;
+using Tareas.API.Services.Helpers;
 using Tareas.API.Models;
 
 namespace Tareas.API.Mappers
