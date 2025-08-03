@@ -20,7 +20,7 @@ namespace Tareas.API.Services.Helpers
                 return ServiceResponse<CrearUsuarioDTO>.Error("El usuario no puede ser nulo.");
             if (string.IsNullOrWhiteSpace(usuario.Nombre))
                 return ServiceResponse<CrearUsuarioDTO>.Error("El nombre del usuario es obligatorio.");
-            if (string.IsNullOrWhiteSpace(usuario.Email) || !usuario.Email.Contains("@"))
+            if (string.IsNullOrWhiteSpace(usuario.Email) || !usuario.Email.Contains('@'))
                 return ServiceResponse<CrearUsuarioDTO>.Error("El email del usuario es obligatorio y debe ser válido.");
             if (string.IsNullOrWhiteSpace(usuario.Contrasena) || usuario.Contrasena.Length < 6)
                 return ServiceResponse<CrearUsuarioDTO>.Error("La contraseña del usuario es obligatoria y debe tener al menos 6 caracteres.");
@@ -33,12 +33,12 @@ namespace Tareas.API.Services.Helpers
         /// /// </summary>
         /// <param name="id">ID del usuario a validar.</param>
         /// <returns>ServiceResponse con el resultado de la validación.</returns>
-        public static ServiceResponse<Tarea> EsIdValido(string id)
+        public static ServiceResponse<Usuario> EsIdValido(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                return ServiceResponse<Tarea>.Error("El ID de la tarea no puede ser nulo o vacío.");
+                return ServiceResponse<Usuario>.Error("El ID no puede ser nulo o vacío.");
 
-            return ServiceResponse<Tarea>.Ok(null, "El ID es válido.");
+            return ServiceResponse<Usuario>.Ok(null, "El ID es válido.");
         }
 
         /// <summary>
