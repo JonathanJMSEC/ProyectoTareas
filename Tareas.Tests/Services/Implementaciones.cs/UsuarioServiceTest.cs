@@ -154,6 +154,13 @@ namespace Tareas.Tests.Services.Implementaciones
             // Arrange
             string usuarioId = "12345";
             var usuarioRepositoryMock = new Mock<IUsuarioRepository>();
+            usuarioRepositoryMock
+                .Setup(repo => repo.ObtenerTareasPorUsuarioAsync(usuarioId))
+                .ReturnsAsync(new List<Tarea>
+                {
+                    new Tarea("titulo", "desc", "estado", DateTime.Now.AddDays(1)),
+                    new Tarea("titulo2", "desc2", "estado2", DateTime.Now.AddDays(2))
+                });
             var usuarioService = new UsuarioService(usuarioRepositoryMock.Object);
 
             // Act
