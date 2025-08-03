@@ -44,6 +44,24 @@ namespace Tareas.Tests.Services.Implementaciones
         }
 
         [Fact]
+        public async Task CrearUsuarioAsync_UsuarioNull_DeberiaLanzarMensajeDeError()
+        {
+            // Arrange
+            CrearUsuarioDTO? usuarioDto = null;
+
+            var usuarioRepositoryMock = new Mock<IUsuarioRepository>();
+            var usuarioService = new UsuarioService(usuarioRepositoryMock.Object);
+
+            // Act
+            var resultado = await usuarioService.CrearUsuarioAsync(usuarioDto);
+
+            // Assert
+            usuarioRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Usuario>()), Times.Never);
+            Assert.NotNull(resultado);
+            Assert.False(resultado.Success);
+        }
+
+        [Fact]
         public async Task ObtenerUsuarioPorIdAsync_DeberiaDevolverUnUsuario()
         {
             // Arrange
