@@ -85,7 +85,6 @@ namespace Tareas.Tests.Services.Implementaciones
 
             Assert.NotNull(resultado);
             Assert.Equal("Usuario obtenido correctamente.", resultado.Message);
-            Assert.Equal(usuarioId, resultado.Data.Id.ToString());
             Assert.True(resultado.Success);
         }
 
@@ -147,7 +146,6 @@ namespace Tareas.Tests.Services.Implementaciones
             Assert.True(resultado.Success);
             Assert.Equal(usuarioDto.Nombre, resultado.Data.Nombre);
             Assert.Equal(usuarioDto.Email, resultado.Data.Email);
-            Assert.Equal(usuarioId, resultado.Data.Id.ToString());
         }
 
         [Fact]

@@ -25,15 +25,16 @@ namespace Tareas.API.Services.Implementaciones
         /// </summary>
         /// <param name="usuario">Los datos del usuario a crear</param>
         /// <returns>Un resultado  indicando si se completo la  tarea</returns>
-        public async Task<ServiceResponse<Usuario>> CrearUsuarioAsync(CrearUsuarioDTO usuario)
+        public async Task<ServiceResponse<ResumenUsuarioDTO>> CrearUsuarioAsync(CrearUsuarioDTO usuario)
         {
-            ValidacionesUsuario.EsUsuarioValido(usuario);
+            if (!ValidacionesUsuario.EsUsuarioValido(usuario).Success)
+                return ServiceResponse<ResumenUsuarioDTO>.Error("Los datos del usuario son inválidos.");
 
             var usuarioCreado = UsuarioMapper.ToModel(usuario);
 
             await _context.AddAsync(usuarioCreado);
 
-            return ServiceResponse<Usuario>.Ok(usuarioCreado, "El usuario ha sido creado correctamente.");
+            return ServiceResponse<ResumenUsuarioDTO>.Ok(UsuarioMapper.ToResumenDTO(usuarioCreado), "El usuario ha sido creado correctamente.");
         }
 
         /// <summary>
@@ -41,15 +42,17 @@ namespace Tareas.API.Services.Implementaciones
         /// Valida que el ID sea correcto y que el usuario exista.
         /// </summary>
         /// <returns>Respuesta con el usuario obtenido y mensaje de éxito o error.</returns>    
-        public async Task<ServiceResponse<Usuario>> ObtenerUsuarioPorIdAsync(string id)
+        public async Task<ServiceResponse<ResumenUsuarioDTO>> ObtenerUsuarioPorIdAsync(string id)
         {
-            ValidacionesUsuario.EsIdValido(id);
+            if (!ValidacionesUsuario.EsIdValido(id).Success)
+                return ServiceResponse<ResumenUsuarioDTO>.Error("El ID del usuario es inválido.");
 
             var usuarioObtenido = await _context.GetByIdAsync(id);
 
-            ValidacionesUsuario.EsUsuarioExistente(usuarioObtenido);
+            if (!ValidacionesUsuario.EsUsuarioExistente(usuarioObtenido).Success)
+                return ServiceResponse<ResumenUsuarioDTO>.Error("El usuario no existe.");
 
-            return ServiceResponse<Usuario>.Ok(usuarioObtenido, "Usuario obtenido correctamente.");
+            return ServiceResponse<ResumenUsuarioDTO>.Ok(UsuarioMapper.ToResumenDTO(usuarioObtenido), "Usuario obtenido correctamente.");
 
         }
 
@@ -62,7 +65,8 @@ namespace Tareas.API.Services.Implementaciones
         {
             IEnumerable<Usuario> listaDeUsuarios = await _context.GetAllAsync();
 
-            ValidacionesUsuario.EsListaDeUsuariosValida(listaDeUsuarios);
+            if (!ValidacionesUsuario.EsListaDeUsuariosValida(listaDeUsuarios).Success)
+                return ServiceResponse<IEnumerable<Usuario>>.Error("No se encontraron usuarios.");
 
             return ServiceResponse<IEnumerable<Usuario>>.Ok(listaDeUsuarios, "Usuarios obtenidos correctamente.");
         }
@@ -74,20 +78,18 @@ namespace Tareas.API.Services.Implementaciones
         /// <param name="id">ID del usuario a actualizar</param>
         /// <param name="usuario">DTO con los nuevos datos del usuario</param>  
         /// <returns>Respuesta con el usuario actualizado y mensaje de éxito o error.</returns>
-        public async Task<ServiceResponse<Usuario>> ActualizarUsuarioAsync(string id, CrearUsuarioDTO usuario)
+        public async Task<ServiceResponse<ResumenUsuarioDTO>> ActualizarUsuarioAsync(string id, CrearUsuarioDTO usuario)
         {
-            ValidacionesUsuario.EsIdValido(id);
-            ValidacionesUsuario.EsUsuarioValido(usuario);
-
             var existingUsuario = await _context.GetByIdAsync(id);
 
-            ValidacionesUsuario.EsUsuarioExistente(existingUsuario);
+            if (ValidacionesUsuario.EsIdValido(id).Success == false ||  ValidacionesUsuario.EsUsuarioValido(usuario).Success == false || existingUsuario == null)
+                return ServiceResponse<ResumenUsuarioDTO>.Error("El usuario no existe o los datos proporcionados son inválidos.");
 
             await _context.UpdateAsync(id, UsuarioMapper.ToModelActualizar(existingUsuario, usuario));
 
             existingUsuario = await _context.GetByIdAsync(id);
 
-            return ServiceResponse<Usuario>.Ok(existingUsuario, "Usuario actualizado correctamente.");
+            return ServiceResponse<ResumenUsuarioDTO>.Ok(UsuarioMapper.ToResumenDTO(existingUsuario), "Usuario actualizado correctamente.");
 
         }
 
@@ -99,11 +101,13 @@ namespace Tareas.API.Services.Implementaciones
         /// <returns>Una lista de tareas asociadas al usuario</returns>
         public async Task<ServiceResponse<IEnumerable<Tarea>>> ObtenerTareasPorUsuarioAsync(string usuarioId)
         {
-            ValidacionesUsuario.EsIdValido(usuarioId);
+            if (!ValidacionesUsuario.EsIdValido(usuarioId).Success)
+                return ServiceResponse<IEnumerable<Tarea>>.Error("El ID del usuario es inválido.");
 
             IEnumerable<Tarea> tareasDelUsuario = await _context.ObtenerTareasPorUsuarioAsync(usuarioId);
 
-            ValidacionesTarea.EsListaDeTareasValida(tareasDelUsuario);
+            if  (!ValidacionesTarea.EsListaDeTareasValida(tareasDelUsuario).Success)
+                return ServiceResponse<IEnumerable<Tarea>>.Error("El usuario no tiene tareas asociadas.");
 
             return ServiceResponse<IEnumerable<Tarea>>.Ok(tareasDelUsuario, "Tareas obtenidas correctamente.");
         }
