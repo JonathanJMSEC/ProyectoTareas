@@ -6,9 +6,9 @@ namespace Tareas.API.Services.Interfaces
 {
     public interface ITareaService
     {
-        Task<ServiceResponse<Tarea>> CrearTareaAsync(CrearTareaDTO tarea);
-        Task<ServiceResponse<Tarea>> ObtenerTareaPorIdAsync(string id);
-        Task<ServiceResponse<Tarea>> ActualizarTareaAsync(string id, ActualizarTareaDTO tarea);
-        Task<ServiceResponse<Tarea>> EliminarTareaAsync(string id);
+        Task<ServiceResponse<ResumenTareaDTO>> CrearTareaAsync(CrearTareaDTO tarea);
+        Task<ServiceResponse<ListarTareaDTO>> ObtenerTareaPorIdAsync(string id);
+        Task<ServiceResponse<ResumenTareaDTO>> ActualizarTareaAsync(string id, ActualizarTareaDTO tarea);
+        Task<ServiceResponse<ResumenTareaDTO>> EliminarTareaAsync(string id);
     }
 }
