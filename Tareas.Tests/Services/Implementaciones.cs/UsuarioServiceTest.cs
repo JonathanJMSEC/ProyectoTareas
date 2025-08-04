@@ -50,6 +50,10 @@ namespace Tareas.Tests.Services.Implementaciones
             CrearUsuarioDTO? usuarioDto = null;
 
             var usuarioRepositoryMock = new Mock<IUsuarioRepository>();
+            usuarioRepositoryMock
+                .Setup(repo => repo.AddAsync(It.IsAny<Usuario>()))
+                .Returns(Task.CompletedTask);
+
             var usuarioService = new UsuarioService(usuarioRepositoryMock.Object);
 
             // Act
@@ -86,6 +90,29 @@ namespace Tareas.Tests.Services.Implementaciones
             Assert.NotNull(resultado);
             Assert.Equal("Usuario obtenido correctamente.", resultado.Message);
             Assert.True(resultado.Success);
+        }
+
+        [Fact]
+        public async Task ObtenerUsuarioPorIdAsync_UsuarioNoExistente_DeberiaDevolverUnError()
+        {
+            // Arrange
+            string? usuarioId = null;
+
+            var usuarioRepositoryMock = new Mock<IUsuarioRepository>();
+
+            usuarioRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(usuarioId))
+                .ThrowsAsync(new Exception("Usuario no encontrado"));
+            var usuarioService = new UsuarioService(usuarioRepositoryMock.Object);
+
+            // Act
+            var resultado = await usuarioService.ObtenerUsuarioPorIdAsync(usuarioId);
+
+            // Assert
+            usuarioRepositoryMock.Verify(repo => repo.GetByIdAsync(usuarioId), Times.Never);
+            Assert.NotNull(resultado);
+            Assert.False(resultado.Success);
+            Assert.Equal("El ID del usuario es inválido.", resultado.Message);
         }
 
         [Fact]
@@ -146,6 +173,36 @@ namespace Tareas.Tests.Services.Implementaciones
             Assert.True(resultado.Success);
             Assert.Equal(usuarioDto.Nombre, resultado.Data.Nombre);
             Assert.Equal(usuarioDto.Email, resultado.Data.Email);
+        }
+
+        [Fact]
+        public async Task ActualizarUsuarioAsync_UsuarioSinNombre_DeberiaDevolverUnError()
+        {
+            // Arrange
+            var usuarioId = "507f191e810c19729de860ea";
+            var usuarioDto = new CrearUsuarioDTO
+            {
+                Nombre = null,
+                Email = "test@",
+                Contrasena = "12345"
+            };
+            var usuarioRepositoryMock = new Mock<IUsuarioRepository>();
+            usuarioRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(usuarioId))
+                .ReturnsAsync(new Usuario("Old User", "old@mail", "oldPassword")
+                {
+                    Id = ObjectId.Parse(usuarioId)
+                });
+            var usuarioService = new UsuarioService(usuarioRepositoryMock.Object);
+
+            // Act
+            var resultado = await usuarioService.ActualizarUsuarioAsync(usuarioId, usuarioDto);
+
+            // Assert
+            usuarioRepositoryMock.Verify(repo => repo.GetByIdAsync(usuarioId), Times.Once);
+            usuarioRepositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<string>(), It.IsAny<Usuario>()), Times.Never);
+            Assert.NotNull(resultado);
+            Assert.False(resultado.Success);
         }
 
         [Fact]
