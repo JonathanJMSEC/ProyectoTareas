@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using Tareas.API.DTO.Tarea;
 using Tareas.API.Models;
 using Tareas.API.Services.Implementaciones;
@@ -72,7 +73,7 @@ namespace Tareas.API.Services.Helpers
             if (string.IsNullOrWhiteSpace(id))
                 return ServiceResponse<Tarea>.Error("El ID de la tarea no puede ser nulo o vacío.");
 
-            if (!Guid.TryParse(id, out _))
+            if (!ObjectId.TryParse(id, out _))
                 return ServiceResponse<Tarea>.Error("El ID de la tarea debe ser un GUID válido.");
 
             return ServiceResponse<Tarea>.Ok(null, "El ID es válido.");
