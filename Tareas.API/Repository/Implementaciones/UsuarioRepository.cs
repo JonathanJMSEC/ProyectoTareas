@@ -9,18 +9,29 @@ namespace Tareas.API.Repository.Implementaciones
     /// Implementación del repositorio de usuarios.
     /// Hereda de MongoRepository para operaciones CRUD básicas.
     /// </summary>
-    public class UsuarioRepository : MongoRepository<Usuario>, IRepository<Usuario>
+    public class UsuarioRepository : IUsuarioRepository
     {
-        public UsuarioRepository(IMongoDatabase database) : base(database, "Usuarios")
+        private readonly MongoRepository<Usuario> _baseRepo;
+        public UsuarioRepository(IMongoDatabase database)
         {
+            _baseRepo = new MongoRepository<Usuario>(database, "Usuarios");
         }
+
+        public Task AddAsync(Usuario entity) => _baseRepo.AddAsync(entity);
+
+        public Task DeleteAsync(string id) => _baseRepo.DeleteAsync(id);
+
+        public Task<IEnumerable<Usuario>> GetAllAsync() => _baseRepo.GetAllAsync();
+
+        public Task<Usuario> GetByIdAsync(string id) => _baseRepo.GetByIdAsync(id);
 
         public async Task<IEnumerable<Tarea>> ObtenerTareasPorUsuarioAsync(string usuarioId)
         {
-            var filter = Builders<Usuario>.Filter.Eq("_id", ObjectId.Parse(usuarioId));
-            var usuario = await Collection.Find(filter).FirstOrDefaultAsync();
+            Usuario usuario = await _baseRepo.GetByIdAsync(usuarioId);
 
-            return usuario.Tareas;
+            return usuario?.Tareas ?? Enumerable.Empty<Tarea>();
         }
+
+        public Task UpdateAsync(string id, Usuario entity) => _baseRepo.UpdateAsync(id, entity);
     }
 }
