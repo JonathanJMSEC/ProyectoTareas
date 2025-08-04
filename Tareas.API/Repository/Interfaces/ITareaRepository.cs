@@ -7,7 +7,7 @@ namespace Tareas.API.Repository.Interfaces
     {
         Task<Tarea> GetByIdAsync(string idTarea, string idUsuario);
         Task AddAsync(string idUsuario, Tarea entity);
-        Task UpdateAsync(string idUsuario, CrearTareaDTO tareaDto, string idTarea);
+        Task UpdateAsync(string idUsuario, ActualizarTareaDTO tareaDto, string idTarea);
         Task DeleteAsync(string idUsuario, string idTarea);
     }
 }

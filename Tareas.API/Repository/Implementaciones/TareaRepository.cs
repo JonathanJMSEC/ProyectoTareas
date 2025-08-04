@@ -36,7 +36,7 @@ namespace Tareas.API.Repository.Implementaciones
             await _baseRepo.UpdateAsync(idUsuario, usuario);
         }
 
-        public async Task UpdateAsync(string idUsuario, CrearTareaDTO tareaDto, string idTarea)
+        public async Task UpdateAsync(string idUsuario, ActualizarTareaDTO tareaDto, string idTarea)
         {
             var usuario = await _baseRepo.GetByIdAsync(idUsuario);
         if (usuario == null) throw new Exception("Usuario no encontrado");
