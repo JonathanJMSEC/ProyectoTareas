@@ -3,9 +3,9 @@ using Tareas.API.DTO.Tarea;
 using Moq;
 using Tareas.API.Repository.Interfaces;
 using Tareas.API.Models;
-using MongoDB.Bson;
-using Microsoft.AspNetCore.Mvc;
+using Tareas.API.Repository.Implementaciones;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Tareas.Tests.Services.Implementaciones
 {
@@ -21,19 +21,20 @@ namespace Tareas.Tests.Services.Implementaciones
                 Descripcion = "descripcion test",
                 FechaLimite = DateTime.Now.AddDays(2)
             };
+            string idDelUsuario = "507f191e810c19729de860ea";
 
-            var repositoryMock = new Mock<IRepository<Tarea>>();
+            var repositoryMock = new Mock<ITareaRepository>();
             repositoryMock
-                .Setup(repo => repo.AddAsync(It.IsAny<Tarea>()))
+                .Setup(repo => repo.AddAsync("507f191e810c19729de860ea", It.IsAny<Tarea>()))
                 .Returns(Task.CompletedTask);
 
             var tareaService = new TareaService(repositoryMock.Object);
 
             // When
-            var resultado = await tareaService.CrearTareaAsync(tareaACrear);
+            var resultado = await tareaService.CrearTareaAsync(idDelUsuario, tareaACrear);
 
             // Then
-            repositoryMock.Verify(repo => repo.AddAsync(It.Is<Tarea>(t =>
+            repositoryMock.Verify(repo => repo.AddAsync("507f191e810c19729de860ea", It.Is<Tarea>(t =>
                 t.Titulo == tareaACrear.Titulo &&
                 t.Descripcion == tareaACrear.Descripcion &&
                 t.FechaLimite == tareaACrear.FechaLimite)), Times.Once);
@@ -46,18 +47,19 @@ namespace Tareas.Tests.Services.Implementaciones
         {
             // Given
             CrearTareaDTO? tareaACrear = null;
+            string idDelUsuario = "507f191e810c19729de860ea";
 
-            var repositoryMock = new Mock<IRepository<Tarea>>();
+            var repositoryMock = new Mock<ITareaRepository>();
             repositoryMock
-                .Setup(repo => repo.AddAsync(It.IsAny<Tarea>()))
+                .Setup(repo => repo.AddAsync(idDelUsuario, It.IsAny<Tarea>()))
                 .Returns(Task.CompletedTask);
 
             var tareaService = new TareaService(repositoryMock.Object);
 
             // When
-            ServiceResponse<ResumenTareaDTO> resultado = await tareaService.CrearTareaAsync(tareaACrear);
+            ServiceResponse<ResumenTareaDTO> resultado = await tareaService.CrearTareaAsync(idDelUsuario, tareaACrear);
             // Then
-            repositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Tarea>()), Times.Never);
+            repositoryMock.Verify(repo => repo.AddAsync("507f191e810c19729de860ea", It.IsAny<Tarea>()), Times.Never);
             Assert.NotNull(resultado);
             Assert.Equal("Los datos de la tarea son inválidos.", resultado.Message);
             Assert.False(resultado.Success);
@@ -68,19 +70,20 @@ namespace Tareas.Tests.Services.Implementaciones
         {
             // Given
             string tareaId = "507f191e810c19729de860ea";
+            string idDelUsuario = "507f191e810c19729de860eb";
 
-            var repositoryMock = new Mock<IRepository<Tarea>>();
+            var repositoryMock = new Mock<ITareaRepository>();
             repositoryMock
-                .Setup(repo => repo.GetByIdAsync(tareaId))
+                .Setup(repo => repo.GetByIdAsync(tareaId, idDelUsuario))
                 .ReturnsAsync(new Tarea("test tarea", "desc test", "estado", DateTime.Now.AddDays(2)));
 
             var tareaService = new TareaService(repositoryMock.Object);
 
             // When
-            ServiceResponse<ListarTareaDTO> resultado = await tareaService.ObtenerTareaPorIdAsync(tareaId);
+            ServiceResponse<ListarTareaDTO> resultado = await tareaService.ObtenerTareaPorIdAsync(tareaId, idDelUsuario);
 
             // Then
-            repositoryMock.Verify(repo => repo.GetByIdAsync(tareaId), Times.Once);
+            repositoryMock.Verify(repo => repo.GetByIdAsync(tareaId, idDelUsuario), Times.Once);
             Assert.NotNull(resultado);
             Assert.Equal("Tarea obtenida exitosamente", resultado.Message);
             Assert.Equal("test tarea", resultado.Data.Titulo);
@@ -91,24 +94,128 @@ namespace Tareas.Tests.Services.Implementaciones
         public async Task ObtenerTareaPorIdAsync_IdVacio_DeberiaDevolverUnError()
         {
             // Given
-            string tareaId = " ";
+            string tareaId = "507f191e810c19729de860eb";
+            string idDelUsuario = " ";
 
-            var repositoryMock = new Mock<IRepository<Tarea>>();
+
+            var repositoryMock = new Mock<ITareaRepository>();
             repositoryMock
-                .Setup(repo => repo.GetByIdAsync(tareaId))
+                .Setup(repo => repo.GetByIdAsync(tareaId, idDelUsuario))
                 .ReturnsAsync(new Tarea("test tarea", "desc test", "estado", DateTime.Now.AddDays(2)));
 
             var tareaService = new TareaService(repositoryMock.Object);
             // When
-            ServiceResponse<ListarTareaDTO> resultado = await tareaService.ObtenerTareaPorIdAsync(tareaId);
+            ServiceResponse<ListarTareaDTO> resultado = await tareaService.ObtenerTareaPorIdAsync(tareaId, idDelUsuario);
 
             // Then
-            repositoryMock.Verify(repo => repo.GetByIdAsync(tareaId), Times.Never);
+            repositoryMock.Verify(repo => repo.GetByIdAsync(tareaId, idDelUsuario), Times.Never);
             Assert.NotNull(resultado);
             Assert.Null(resultado.Data);
             Assert.False(resultado.Success);
         }
 
-        
+        [Fact]
+        public async Task ActualizarTareaAsync_DeberiaActualizarTareaExistente()
+        {
+            // Given
+            string tareaId = "507f191e810c19729de860ea";
+            string idDelUsuario = "507f191e810c19729de860eb";
+
+            var tareaActualizar = new ActualizarTareaDTO
+            {
+                Titulo = "titulo updated",
+                Descripcion = "descripcion updated",
+                FechaLimite = DateTime.Now.AddDays(4),
+                Estado = "estado Nuevo"
+            };
+
+            var repositoryMock = new Mock<ITareaRepository>();
+            var tareaExistente = new Tarea("test tarea", "desc test", "estado", DateTime.Now.AddDays(2))
+            {
+                Id = ObjectId.Parse(tareaId)
+            };
+
+            repositoryMock
+                .Setup(repo => repo.GetByIdAsync(tareaId, idDelUsuario))
+                .ReturnsAsync(() => tareaExistente);
+
+            repositoryMock
+                .Setup(repo => repo.UpdateAsync(idDelUsuario, tareaActualizar, tareaId))
+                .Callback<string, ActualizarTareaDTO, string>((usuarioId, tareaDto, tareaIdParam) =>
+                {
+                    tareaExistente.Titulo = tareaDto.Titulo;
+                    tareaExistente.Descripcion = tareaDto.Descripcion;
+                    tareaExistente.FechaLimite = tareaDto.FechaLimite;
+                    tareaExistente.Estado = tareaDto.Estado;
+                })
+                .Returns(Task.CompletedTask);
+
+            var tareaService = new TareaService(repositoryMock.Object);
+            // When
+            ServiceResponse<ResumenTareaDTO> resultado = await tareaService.ActualizarTareaAsync(idDelUsuario, tareaId, tareaActualizar);
+            // Then
+            repositoryMock.Verify(repo => repo.GetByIdAsync(tareaId, idDelUsuario), Times.Exactly(2));
+            Assert.True(resultado.Success);
+            Assert.Equal("Tarea actualizada exitosamente", resultado.Message);
+            Assert.Equal(tareaActualizar.Titulo, resultado.Data.Titulo);
+            Assert.Equal(tareaActualizar.FechaLimite, resultado.Data.FechaLimite);
+            Assert.Equal(tareaActualizar.Estado, resultado.Data.Estado);
+        }
+
+        [Fact]
+        public async Task ActualizarTareaAsync_ConIdDelUsuarioNull_DeberiaDevolverError()
+        {
+            // Given
+            string tareaId = "507f191e810c19729de860ea";
+            string? idDelUsuario = null;
+
+            var tareaActualizar = new ActualizarTareaDTO
+            {
+                Titulo = "updated titulo",
+                Descripcion = "descripcion updated",
+                FechaLimite = DateTime.Now.AddDays(4),
+                Estado = "estado Nuevo"
+            };
+
+            var repositoryMock = new Mock<ITareaRepository>();
+            repositoryMock
+                .Setup(repo => repo.GetByIdAsync(tareaId, idDelUsuario))
+                .ReturnsAsync(new Tarea("test tarea", "desc test", "estado", DateTime.Now.AddDays(2))
+                {
+                    Id = ObjectId.Parse(tareaId)
+                });
+
+            var tareaService = new TareaService(repositoryMock.Object);
+            // When
+            ServiceResponse<ResumenTareaDTO> resultado = await tareaService.ActualizarTareaAsync(idDelUsuario, tareaId, tareaActualizar);
+            // Then
+            repositoryMock.Verify(repo => repo.GetByIdAsync(tareaId, idDelUsuario), Times.Never);
+            Assert.False(resultado.Success);
+            Assert.Equal("El ID del  Usuario es inválido.", resultado.Message);
+        }
+
+        [Fact]
+        public async Task EliminarTareaAsync_DeberiaEliminarLaTarea()
+        {
+            // Given
+            string tareaId = "507f191e810c19729de860ea";
+            string idDelUsuario = "507f191e810c19729de860eb";
+
+            var repositoryMock = new Mock<ITareaRepository>();
+            repositoryMock
+                .Setup(repo => repo.GetByIdAsync(tareaId, idDelUsuario))
+                .ReturnsAsync(new Tarea("test tarea", "desc test", "estado", DateTime.Now.AddDays(2))
+                {
+                    Id = ObjectId.Parse(tareaId)
+                });
+
+            var tareaService = new TareaService(repositoryMock.Object);
+            // When
+            ServiceResponse<ResumenTareaDTO> resultado = await tareaService.EliminarTareaAsync(tareaId, idDelUsuario);
+            // Then
+            Assert.True(resultado.Success);
+            repositoryMock.Verify(repo => repo.GetByIdAsync(tareaId, idDelUsuario), Times.AtMostOnce());
+            repositoryMock.Verify(repo => repo.DeleteAsync(idDelUsuario, tareaId), Times.Once);
+        }
     }
 }

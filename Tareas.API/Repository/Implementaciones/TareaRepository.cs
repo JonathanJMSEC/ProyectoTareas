@@ -47,6 +47,7 @@ namespace Tareas.API.Repository.Implementaciones
         tareaExistente.Titulo = tareaDto.Titulo;
         tareaExistente.Descripcion = tareaDto.Descripcion;
         tareaExistente.FechaLimite = tareaDto.FechaLimite;
+            tareaExistente.Id = ObjectId.Parse(idTarea);
 
         await _baseRepo.UpdateAsync(idUsuario, usuario);
         }
