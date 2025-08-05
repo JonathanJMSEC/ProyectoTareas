@@ -14,9 +14,9 @@ namespace Tareas.API.Services.Implementaciones
     /// </summary>
    public class TareaService : ITareaService
     {
-        private readonly TareaRepository _context;
+        private readonly ITareaRepository _context;
 
-        public TareaService(TareaRepository context)
+        public TareaService(ITareaRepository context)
         {
             _context = context;
         }
@@ -71,7 +71,7 @@ namespace Tareas.API.Services.Implementaciones
             if (!ValidacionesTarea.EsIdValido(idTarea).Success)
                 return ServiceResponse<ResumenTareaDTO>.Error("El ID de la tarea es inválido.");
             if  (!ValidacionesTarea.EsIdValido(usuarioId).Success)
-                return ServiceResponse<ResumenTareaDTO>.Error("El ID de la tarea es inválido.");
+                return ServiceResponse<ResumenTareaDTO>.Error("El ID del  Usuario es inválido.");
 
             if (!ValidacionesTarea.EsTareaActualizable(idTarea, tarea).Success)
                 return ServiceResponse<ResumenTareaDTO>.Error("Los datos de la tarea son inválidos.");
@@ -83,7 +83,9 @@ namespace Tareas.API.Services.Implementaciones
 
             await _context.UpdateAsync(usuarioId, tarea, idTarea);
 
-            return ServiceResponse<ResumenTareaDTO>.Ok(TareaMapper.ToResumenDTO(existingTarea), "Tarea actualizada exitosamente");
+            var tareaActualizada = await _context.GetByIdAsync(idTarea, usuarioId);
+
+            return ServiceResponse<ResumenTareaDTO>.Ok(TareaMapper.ToResumenDTO(tareaActualizada), "Tarea actualizada exitosamente");
         }
 
         /// <summary>
